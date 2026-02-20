@@ -1,0 +1,69 @@
+@model LibraryNetwork.ViewModels.BorrowVM
+
+@{
+    ViewData["Title"] = "Borrow Book";
+}
+
+<h1 class="page-header"><i class="bi bi-bookmark-plus me-2"></i>Borrow: @Model.BookTitle</h1>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/books/default.png" : Model.ImageUrl)"
+                 alt="@Model.BookTitle"
+                 class="card-img-top" style="object-fit:cover; max-height:300px;" />
+            <div class="card-body">
+                <h5 class="card-title" style="color: var(--lib-primary);">@Model.BookTitle</h5>
+                <p class="card-text text-muted">@Model.Author</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header" style="background: var(--lib-primary); color: #fff;">
+                <i class="bi bi-journals me-1"></i> Choose a Copy
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-lib mb-0">
+                        <thead>
+                            <tr>
+                                <th>Library</th>
+                                <th>Inventory Code</th>
+                                <th>Price/Day</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var copy in Model.AvailableCopies)
+                            {
+                                <tr>
+                                    <td><i class="bi bi-building me-1"></i>@copy.LibraryName</td>
+                                    <td><code>@copy.InventoryCode</code></td>
+                                    <td>@copy.PricePerDay.ToString("C")</td>
+                                    <td>
+                                        <form asp-action="BorrowConfirm" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="bookCopyId" value="@copy.BookCopyId" />
+                                            <button type="submit" class="btn btn-sm btn-lib-accent"
+                                                    onclick="return confirm('Borrow this copy for 14 days?')">
+                                                <i class="bi bi-bookmark-check me-1"></i>Borrow
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a asp-controller="Books" asp-action="Details" asp-route-id="@Model.BookId" class="btn btn-lib-outline">
+                <i class="bi bi-arrow-left me-1"></i>Back to Book
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿@model LibraryNetwork.Models.Librarian
+
+@{
+    ViewData["Title"] = "Add Librarian";
+}
+
+<h1 class="page-header"><i class="bi bi-person-plus me-2"></i>Add Librarian</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-4">
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Profile Picture</label>
+                        <input type="file" name="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label asp-for="FirstName" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">First Name</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="LastName" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Last Name</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    @* LibraryId is auto-assigned from the logged-in admin *@
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-lib-accent"><i class="bi bi-check-circle me-1"></i> Create Librarian</button>
+                        <a asp-action="Index" class="btn btn-lib-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

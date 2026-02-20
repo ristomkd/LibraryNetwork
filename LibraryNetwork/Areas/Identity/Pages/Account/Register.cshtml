@@ -1,0 +1,96 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center" style="animation: fadeInUp .5s ease both;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus" style="font-size: 2.5rem; color: var(--lib-accent);"></i>
+                    <h2 class="mt-2" style="font-family: var(--lib-font-heading); color: var(--lib-primary); font-weight: 800;">
+                        Create Account
+                    </h2>
+                    <p style="color: var(--lib-muted); font-size: .9rem;">Join LibraryNetwork today</p>
+                </div>
+
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label asp-for="Input.FirstName" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">First Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input asp-for="Input.FirstName" class="form-control" placeholder="Name" />
+                            </div>
+                            <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Input.LastName" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Last Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input asp-for="Input.LastName" class="form-control" placeholder="Surname" />
+                            </div>
+                            <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Input.ConfirmPassword" class="form-label fw-semibold" style="color: var(--lib-muted); text-transform: uppercase; font-size: .75rem; letter-spacing: 1px;">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--lib-peach); border-color: #ddd; color: var(--lib-primary);">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lib-accent btn-lg">
+                        <i class="bi bi-person-check me-1"></i> Create Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 pt-3" style="border-top: 1px solid rgba(92,61,46,.08);">
+                    <p style="color: var(--lib-muted); font-size: .9rem; margin-bottom: 0;">
+                        Already have an account?
+                        <a asp-page="./Login" class="fw-semibold">Log in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

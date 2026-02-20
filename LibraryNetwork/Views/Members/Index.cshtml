@@ -1,0 +1,74 @@
+﻿@model IEnumerable<LibraryNetwork.Models.Member>
+
+@{
+    ViewData["Title"] = "Members";
+}
+
+<h1 class="page-header"><i class="bi bi-people me-2"></i>Members</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-lib-accent">
+        <i class="bi bi-plus-circle me-1"></i> Add Member
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-lib mb-0">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Membership #</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th style="width: 180px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.FullName"
+                                             class="rounded-circle"
+                                             style="width: 36px; height: 36px; object-fit: cover; border: 2px solid var(--lib-peach); flex-shrink: 0;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                             style="width: 36px; height: 36px; background: var(--lib-peach); color: var(--lib-primary); font-weight: 700; font-size: .85rem; flex-shrink: 0;">
+                                            @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
+                                        </div>
+                                    }
+                                    <div class="fw-semibold" style="color: var(--lib-primary);">@item.FirstName @item.LastName</div>
+                                </div>
+                            </td>
+                            <td><code>@item.MembershipNumber</code></td>
+                            <td style="color: var(--lib-muted);">@item.Email</td>
+                            <td style="color: var(--lib-muted);">@item.phoneNumber</td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-lib-primary"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5" style="color: var(--lib-muted);">
+        <i class="bi bi-people" style="font-size: 3rem;"></i>
+        <p class="mt-2">No members registered yet.</p>
+    </div>
+}

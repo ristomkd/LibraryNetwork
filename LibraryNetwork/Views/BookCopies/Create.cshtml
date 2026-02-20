@@ -1,0 +1,59 @@
+﻿@model LibraryNetwork.Models.BookCopy
+
+@{
+    ViewData["Title"] = "Add Book Copies";
+}
+
+<h1 class="page-header"><i class="bi bi-plus-circle me-2"></i>Add Book Copies</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="BookId" class="form-label fw-semibold">Book</label>
+                        <select asp-for="BookId" class="form-select" asp-items="ViewBag.BookId"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" max="500" />
+                        <span class="text-muted small">
+                            Number of copies to create at once. Inventory codes will be auto-suffixed (e.g. BM-CC-001, BM-CC-002…).
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="InventoryCode" class="form-label fw-semibold">Inventory Code Prefix</label>
+                        <input asp-for="InventoryCode" class="form-control" placeholder="e.g. BM-CC" />
+                        <span asp-validation-for="InventoryCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PricePerDay" class="form-label fw-semibold">Price Per Day</label>
+                        <input asp-for="PricePerDay" class="form-control" type="number" step="0.01" />
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input class="form-check-input" asp-for="IsAvailable" checked />
+                        <label class="form-check-label" asp-for="IsAvailable">Available</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-lib-accent">
+                            <i class="bi bi-check-lg me-1"></i>Create Copies
+                        </button>
+                        <a asp-action="Index" class="btn btn-lib-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

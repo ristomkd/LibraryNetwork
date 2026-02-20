@@ -1,0 +1,47 @@
+﻿@model LibraryNetwork.Models.BookCopy
+
+@{
+    ViewData["Title"] = "Delete Copy";
+}
+
+<h1 class="page-header text-danger"><i class="bi bi-trash me-2"></i>Delete Copy</h1>
+
+<div class="alert alert-danger alert-lib">
+    <i class="bi bi-exclamation-triangle me-1"></i>
+    Are you sure you want to delete this book copy? This action cannot be undone.
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Inventory Code</dt>
+                    <dd class="col-sm-8"><code>@Model.InventoryCode</code></dd>
+
+                    <dt class="col-sm-4">Book</dt>
+                    <dd class="col-sm-8">@Model.Book?.Title</dd>
+
+                    <dt class="col-sm-4">Library</dt>
+                    <dd class="col-sm-8">@Model.Library?.Name</dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        @(Model.IsAvailable ? "Available" : "On Loan")
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Confirm Delete
+                        </button>
+                        <a asp-action="Index" class="btn btn-lib-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

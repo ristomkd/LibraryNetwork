@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    ViewData["FullBleed"] = true;
+}
+
+<section class="hero-dark">
+    <div class="hero-dark-glow"></div>
+    <div class="hero-dark-content">
+        <div class="hero-dark-ornament">
+            <span class="hero-orn-line"></span>
+            <i class="bi bi-star-fill"></i>
+            <span class="hero-orn-line"></span>
+        </div>
+
+        <p class="hero-dark-label">ACADEMIC LIBRARY NETWORK</p>
+
+        <h1 class="hero-dark-title">
+            Welcome to<br />
+            <span class="hero-dark-accent">LibraryNetwork</span>
+        </h1>
+
+        <p class="hero-dark-subtitle">
+            Browse books across multiple libraries.<br />
+            Borrow with a single click.
+        </p>
+
+        <div class="hero-dark-dots">
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-dark-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-number">@ViewBag.TotalBooks<sup>+</sup></span>
+                <span class="hero-stat-label">Volumes</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">@ViewBag.TotalLibraries</span>
+                <span class="hero-stat-label">Libraries</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">24/7</span>
+                <span class="hero-stat-label">Access</span>
+            </div>
+        </div>
+
+        <div class="hero-dark-buttons">
+            <a asp-controller="Books" asp-action="Index" class="btn btn-hero-gold btn-lg">
+                <i class="bi bi-search me-2"></i>Browse Books
+            </a>
+            @if (!User.Identity!.IsAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-hero-outline btn-lg">
+                    <i class="bi bi-plus me-1"></i>Join Now
+                </a>
+            }
+        </div>
+    </div>
+</section>

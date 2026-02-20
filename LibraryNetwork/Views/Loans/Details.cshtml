@@ -1,0 +1,108 @@
+﻿@model LibraryNetwork.Models.Loan
+
+@{
+    ViewData["Title"] = "Loan Details";
+}
+
+<h1 class="page-header"><i class="bi bi-receipt me-2"></i>Loan Details</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Book</dt>
+                    <dd class="col-sm-8">@Model.BookCopy?.Book?.Title</dd>
+
+                    <dt class="col-sm-4">Inventory Code</dt>
+                    <dd class="col-sm-8"><code>@Model.BookCopy?.InventoryCode</code></dd>
+
+                    <dt class="col-sm-4">Library</dt>
+                    <dd class="col-sm-8">@Model.BookCopy?.Library?.Name</dd>
+
+                    <dt class="col-sm-4">Member</dt>
+                    <dd class="col-sm-8">@Model.Member?.FirstName @Model.Member?.LastName</dd>
+
+                    <dt class="col-sm-4">Borrowed</dt>
+                    <dd class="col-sm-8">@Model.BorrowDate?.ToString("MMMM dd, yyyy")</dd>
+
+                    <dt class="col-sm-4">Due Date</dt>
+                    <dd class="col-sm-8">@Model.DueDate?.ToString("MMMM dd, yyyy")</dd>
+
+                    <dt class="col-sm-4">Returned</dt>
+                    <dd class="col-sm-8">@(Model.ReturnDate?.ToString("MMMM dd, yyyy") ?? "—")</dd>
+
+                    <dt class="col-sm-4">Semester</dt>
+                    <dd class="col-sm-8">@Model.Semester</dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.IsOverdue)
+                        {
+                            <span class="badge badge-overdue">Overdue</span>
+                        }
+                        else
+                        {
+                            <span class="badge @(Model.Status.ToString() == "Active" ? "badge-active" :
+                                                 Model.Status.ToString() == "Returned" ? "badge-returned" : "bg-secondary")">
+                                @Model.Status
+                            </span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Fine</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.FineAmount.HasValue && Model.FineAmount > 0)
+                        {
+                            <span class="text-danger fw-bold">@Model.FineAmount?.ToString("C")</span>
+                            @if (Model.IsFinePaid)
+                            {
+                                <span class="badge bg-success ms-2">
+                                    <i class="bi bi-check-circle me-1"></i>Paid @Model.FinePaidDate?.ToString("MMM dd")
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">No fine</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex gap-2 flex-wrap">
+                @if (User.IsInRole("Admin") && Model.ReturnDate == null)
+                {
+                    <form asp-action="Return" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success"
+                                onclick="return confirm('Mark this book as returned?')">
+                            <i class="bi bi-check2-square me-1"></i>Mark Returned
+                        </button>
+                    </form>
+                }
+
+                @if (Model.FineAmount.HasValue && Model.FineAmount > 0 && !Model.IsFinePaid)
+                {
+                    <form asp-action="PayFine" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-warning"
+                                onclick="return confirm('Mark fine as paid?')">
+                            <i class="bi bi-cash me-1"></i>Pay Fine (@Model.FineAmount?.ToString("C"))
+                        </button>
+                    </form>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-lib-outline">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                }
+
+                <a asp-action="Index" class="btn btn-lib-outline">
+                    <i class="bi bi-arrow-left me-1"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

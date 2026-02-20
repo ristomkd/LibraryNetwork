@@ -1,0 +1,135 @@
+﻿@model LibraryNetwork.Models.Book
+
+@{
+    ViewData["Title"] = Model.Title;
+    var totalCopies = Model.BookCopies?.Count ?? 0;
+    var availableCopies = Model.BookCopies?.Count(c => c.IsAvailable) ?? 0;
+}
+
+<h1 class="page-header"><i class="bi bi-book me-2"></i>@Model.Title</h1>
+
+<div class="row g-4">
+    <!-- Book image -->
+    <div class="col-md-4">
+        <div class="card">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/books/default.png" : Model.ImageUrl)"
+                 alt="@Model.Title"
+                 class="card-img-top" style="object-fit:cover; max-height:380px;" />
+        </div>
+    </div>
+
+    <!-- Book info -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Author</dt>
+                    <dd class="col-sm-9">@Model.Author</dd>
+
+                    <dt class="col-sm-3">ISBN</dt>
+                    <dd class="col-sm-9"><code>@Model.ISBN</code></dd>
+
+                    <dt class="col-sm-3">Category</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge" style="background: var(--lib-accent); color: var(--lib-dark);">
+                            @Model.Category
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">@Model.Description</dd>
+
+                    <dt class="col-sm-3">Total Copies</dt>
+                    <dd class="col-sm-9"><strong>@totalCopies</strong></dd>
+
+                    <dt class="col-sm-3">Available</dt>
+                    <dd class="col-sm-9">
+                        <span class="fw-bold @(availableCopies > 0 ? "text-success" : "text-danger")">
+                            @availableCopies
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex gap-2">
+                @if (User.IsInRole("Member") && availableCopies > 0)
+                {
+                    <a asp-controller="Loans" asp-action="Borrow" asp-route-id="@Model.Id"
+                       class="btn btn-lib-accent">
+                        <i class="bi bi-bookmark-plus me-1"></i>Borrow This Book
+                    </a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                }
+                <a asp-action="Index" class="btn btn-lib-outline">
+                    <i class="bi bi-arrow-left me-1"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Copies per library -->
+<h4 class="page-header mt-5"><i class="bi bi-building me-2"></i>Copies per Library</h4>
+
+@if (Model.BookCopies == null || !Model.BookCopies.Any())
+{
+    <div class="alert alert-warning alert-lib">
+        <i class="bi bi-info-circle me-1"></i> No copies available for this book.
+    </div>
+}
+else
+{
+    var grouped = Model.BookCopies
+        .GroupBy(c => new
+        {
+            c.LibraryId,
+            LibraryName = c.Library != null ? c.Library.Name : "Unknown"
+        })
+        .Select(g => new
+        {
+            LibraryName = g.Key.LibraryName,
+            Total = g.Count(),
+            Available = g.Count(x => x.IsAvailable)
+        })
+        .OrderBy(x => x.LibraryName)
+        .ToList();
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-lib mb-0">
+                    <thead>
+                        <tr>
+                            <th>Library</th>
+                            <th>Total Copies</th>
+                            <th>Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in grouped)
+                        {
+                            <tr>
+                                <td><i class="bi bi-building me-1"></i>@row.LibraryName</td>
+                                <td>@row.Total</td>
+                                <td>
+                                    @if (row.Available > 0)
+                                    {
+                                        <span class="badge badge-available">@row.Available</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-unavailable">0</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

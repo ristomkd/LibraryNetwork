@@ -1,0 +1,122 @@
+﻿@model IEnumerable<LibraryNetwork.Models.Loan>
+
+@{
+    ViewData["Title"] = User.IsInRole("Admin") ? "Loans Management" : "My Loans";
+}
+
+<h1 class="page-header">
+    <i class="bi bi-arrow-left-right me-2"></i>@ViewData["Title"]
+</h1>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-lib-accent">
+            <i class="bi bi-plus-circle me-1"></i>New Loan
+        </a>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-lib mb-0">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Inventory</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th>Member</th>
+                        }
+                        else
+                        {
+                            <th>Library</th>
+                        }
+                        <th>Borrowed</th>
+                        <th>Due</th>
+                        <th>Returned</th>
+                        <th>Status</th>
+                        <th>Fine</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in Model)
+                    {
+                        <tr>
+                            <td>@loan.BookCopy?.Book?.Title</td>
+                            <td><code>@loan.BookCopy?.InventoryCode</code></td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td>@loan.Member?.FirstName @loan.Member?.LastName</td>
+                            }
+                            else
+                            {
+                                <td>@loan.BookCopy?.Library?.Name</td>
+                            }
+                            <td>@loan.BorrowDate?.ToString("MMM dd, yyyy")</td>
+                            <td>@loan.DueDate?.ToString("MMM dd, yyyy")</td>
+                            <td>@(loan.ReturnDate?.ToString("MMM dd, yyyy") ?? "—")</td>
+                            <td>
+                                @if (loan.IsOverdue)
+                                {
+                                    <span class="badge badge-overdue">Overdue</span>
+                                }
+                                else if (loan.Status == LibraryNetwork.Models.Enums.LoanStatus.Active)
+                                {
+                                    <span class="badge badge-active">Active</span>
+                                }
+                                else if (loan.Status == LibraryNetwork.Models.Enums.LoanStatus.Returned)
+                                {
+                                    <span class="badge badge-returned">Returned</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@loan.Status</span>
+                                }
+                            </td>
+                            <td>
+                                @if (loan.FineAmount.HasValue && loan.FineAmount > 0)
+                                {
+                                    <span class="text-danger fw-bold">@loan.FineAmount?.ToString("C")</span>
+                                    @if (loan.IsFinePaid)
+                                    {
+                                        <i class="bi bi-check-circle text-success ms-1" title="Paid"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@loan.Id" class="btn btn-sm btn-lib-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                @if (User.IsInRole("Admin") && loan.ReturnDate == null)
+                                {
+                                    <form asp-action="Return" asp-route-id="@loan.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-success"
+                                                onclick="return confirm('Mark as returned?')">
+                                            <i class="bi bi-check2-square"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+        <p class="mt-2">No loans found.</p>
+    </div>
+}

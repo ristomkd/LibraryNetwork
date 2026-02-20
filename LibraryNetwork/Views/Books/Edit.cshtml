@@ -1,0 +1,88 @@
+﻿@model LibraryNetwork.Models.Book
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Book</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+
+        @* Preview на постоечка слика *@
+        <div class="mb-3">
+            <label class="form-label">Current Image</label><br />
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl"
+                     alt="Book image"
+                     style="max-height:200px; width:100%; object-fit:cover; border-radius:10px; border:1px solid #ddd;" />
+            }
+            else
+            {
+                <div class="text-muted">No image uploaded.</div>
+            }
+        </div>
+
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            @* важно: за да се задржи старата слика ако не се upload-не нова *@
+            <input type="hidden" asp-for="ImageUrl" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ISBN" class="control-label"></label>
+                <input asp-for="ISBN" class="form-control" />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Category" class="control-label"></label>
+                <input asp-for="Category" class="form-control" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            @* Upload нова слика *@
+            <div class="form-group mb-3">
+                <label class="control-label">Upload New Image</label>
+                <input type="file" name="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                <small class="text-muted">Allowed: .jpg, .jpeg, .png, .webp</small>
+            </div>
+
+            <div class="form-group d-flex gap-2">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,113 @@
+@model LibraryNetwork.ViewModels.AdminDashboardVM
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1 class="page-header">
+    <i class="bi bi-speedometer2 me-2"></i>@Model.LibraryName — Dashboard
+</h1>
+
+<!-- Stat cards -->
+<div class="row g-4 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="stat-card stat-primary">
+            <div class="stat-number">@Model.TotalCopies</div>
+            <div class="stat-label">Total Copies</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card stat-success">
+            <div class="stat-number">@Model.AvailableCopies</div>
+            <div class="stat-label">Available</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card stat-accent">
+            <div class="stat-number">@Model.ActiveLoans</div>
+            <div class="stat-label">Active Loans</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card stat-danger">
+            <div class="stat-number">@Model.OverdueLoans</div>
+            <div class="stat-label">Overdue</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick links -->
+<div class="row g-3 mb-4">
+    <div class="col-auto">
+        <a asp-controller="BookCopies" asp-action="Create" class="btn btn-lib-accent">
+            <i class="bi bi-plus-circle me-1"></i> Add Copy
+        </a>
+    </div>
+    <div class="col-auto">
+        <a asp-controller="Loans" asp-action="Create" class="btn btn-lib-primary">
+            <i class="bi bi-arrow-left-right me-1"></i> New Loan
+        </a>
+    </div>
+    <div class="col-auto">
+        <a asp-controller="BookCopies" asp-action="Index" class="btn btn-lib-outline">
+            <i class="bi bi-journals me-1"></i> My Copies
+        </a>
+    </div>
+</div>
+
+<!-- Recent loans table -->
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-clock-history me-1"></i> Recent Loans
+    </div>
+    <div class="card-body p-0">
+        @if (!Model.RecentLoans.Any())
+        {
+            <div class="p-4 text-muted">No loans yet.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-lib mb-0">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Member</th>
+                            <th>Inventory</th>
+                            <th>Borrowed</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model.RecentLoans)
+                        {
+                            <tr>
+                                <td>@loan.BookTitle</td>
+                                <td>@loan.MemberName</td>
+                                <td><code>@loan.InventoryCode</code></td>
+                                <td>@loan.BorrowDate?.ToString("MMM dd")</td>
+                                <td>@loan.DueDate?.ToString("MMM dd")</td>
+                                <td>
+                                    @if (loan.IsOverdue)
+                                    {
+                                        <span class="badge badge-overdue">Overdue</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-active">@loan.Status</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.LoanId"
+                                       class="btn btn-sm btn-lib-primary">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

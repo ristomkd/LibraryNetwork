@@ -1,0 +1,63 @@
+﻿@model IEnumerable<LibraryNetwork.Models.Librarian>
+
+@{
+    ViewData["Title"] = "Librarians";
+}
+
+<h1 class="page-header"><i class="bi bi-person-badge me-2"></i>Librarians</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-lib-accent">
+        <i class="bi bi-plus-circle me-1"></i> Add Librarian
+    </a>
+</div>
+
+<div class="row g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100" style="animation: fadeInUp .4s ease both;">
+                <div class="card-body text-center py-4">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.FirstName @item.LastName"
+                             class="rounded-circle mb-3"
+                             style="width: 60px; height: 60px; object-fit: cover; border: 3px solid var(--lib-peach);" />
+                    }
+                    else
+                    {
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                             style="width: 60px; height: 60px; background: var(--lib-peach); color: var(--lib-primary); font-weight: 800; font-size: 1.3rem;">
+                            @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
+                        </div>
+                    }
+                    <h5 style="font-family: var(--lib-font-heading); color: var(--lib-primary); font-weight: 700;">
+                        @item.FirstName @item.LastName
+                    </h5>
+                    @if (!string.IsNullOrEmpty(item.Email))
+                    {
+                        <p class="mb-1" style="color: var(--lib-muted); font-size: .85rem;">
+                            <i class="bi bi-envelope me-1"></i>@item.Email
+                        </p>
+                    }
+                    <span class="badge" style="background: rgba(92,61,46,.08); color: var(--lib-primary); border: 1px solid rgba(92,61,46,.15); font-size: .8rem;">
+                        <i class="bi bi-building me-1"></i>@(item.Library?.Name ?? "Unassigned")
+                    </span>
+                </div>
+                <div class="card-footer d-flex justify-content-center gap-2">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-lib-primary"><i class="bi bi-eye me-1"></i>Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil me-1"></i>Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash me-1"></i>Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5" style="color: var(--lib-muted);">
+        <i class="bi bi-person-badge" style="font-size: 3rem;"></i>
+        <p class="mt-2">No librarians registered yet.</p>
+    </div>
+}

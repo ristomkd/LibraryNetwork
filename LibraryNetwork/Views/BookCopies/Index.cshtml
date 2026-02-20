@@ -1,0 +1,72 @@
+﻿@model IEnumerable<LibraryNetwork.Models.BookCopy>
+
+@{
+    ViewData["Title"] = "My Copies";
+}
+
+<h1 class="page-header"><i class="bi bi-journals me-2"></i>My Library — Book Copies</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-lib-accent">
+        <i class="bi bi-plus-circle me-1"></i>Add New Copy
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-lib mb-0">
+                <thead>
+                    <tr>
+                        <th>Inventory Code</th>
+                        <th>Book</th>
+                        <th>Price/Day</th>
+                        <th>Status</th>
+                        <th style="width:200px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><code>@item.InventoryCode</code></td>
+                            <td>@item.Book?.Title</td>
+                            <td>@(item.PricePerDay?.ToString("C") ?? "—")</td>
+                            <td>
+                                @if (item.IsAvailable)
+                                {
+                                    <span class="avail-dot available"></span>
+                                    <span class="text-success fw-semibold">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="avail-dot unavailable"></span>
+                                    <span class="text-danger fw-semibold">On Loan</span>
+                                }
+                            </td>
+                            <td class="d-flex gap-1">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-lib-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+        <p class="mt-2">No copies in your library yet.</p>
+    </div>
+}

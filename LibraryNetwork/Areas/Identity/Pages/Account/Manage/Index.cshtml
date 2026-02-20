@@ -1,0 +1,84 @@
+@page
+@model LibraryNetwork.Areas.Identity.Pages.Account.Manage.IndexModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1 class="page-header"><i class="bi bi-person-circle me-2"></i>My Profile</h1>
+
+@if (Model.NeedsSetup)
+{
+    <div class="alert alert-warning alert-lib mb-4">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <strong>Complete your profile</strong> — enter your first and last name to activate borrowing.
+        If you already exist as a library member, your account will be linked automatically.
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success alert-lib alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i> @Model.StatusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form id="profile-form" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label asp-for="Input.FirstName" class="form-label fw-semibold">First Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input asp-for="Input.FirstName" class="form-control" placeholder="Name" />
+                            </div>
+                            <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Input.LastName" class="form-label fw-semibold">Last Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input asp-for="Input.LastName" class="form-control" placeholder="Surname" />
+                            </div>
+                            <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Input.Email" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Input.PhoneNumber" class="form-label fw-semibold">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="+389 7X XXX XXX" />
+                        </div>
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-lib-accent">
+                            <i class="bi bi-check-lg me-1"></i>Save Changes
+                        </button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-lib-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
